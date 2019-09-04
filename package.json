@@ -1,0 +1,26 @@
+{
+  "name": "react-github",
+  "version": "1.0.0",
+  "description": "react next.js koa2",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/F0rL/react-github.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/F0rL/react-github/issues"
+  },
+  "homepage": "https://github.com/F0rL/react-github#readme",
+  "dependencies": {
+    "next": "^9.0.5",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
+  }
+}
