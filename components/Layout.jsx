@@ -22,6 +22,9 @@ export default ({ children }) => (
       <Link href="/context">
         <Button>to context</Button>
       </Link>
+      <Link href="/hooks">
+        <Button>to hooks</Button>
+      </Link>
     </header>
     {children}
   </Fragment>
