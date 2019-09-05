@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Router from "next/router";
 import { Button } from "antd";
+import store from '../store'
 
 const events = [
   'routeChangeStart',
@@ -21,6 +22,8 @@ events.forEach(event => {
 
 export default () => {
   return (
-    <span>Index</span>
+    <div>
+      <h2>index page</h2>
+    </div>
   )
 };
