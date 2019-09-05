@@ -1,4 +1,5 @@
-import { useState, useEffect, useReducer, useLayoutEffect } from "react";
+import { useState, useEffect, useReducer, useLayoutEffect, useContext } from "react";
+import MyContext from '../lib/my-context'
 
 function countReducer(state, action) {
   switch (action.type) {
@@ -12,6 +13,9 @@ function countReducer(state, action) {
 const E = () => {
   const [count, dispatchCount] = useReducer(countReducer, 0);
   const [name, setName] = useState('kuma')
+
+  const context = useContext(MyContext)
+
   useEffect(() => {
     console.log('effect invoked')
     return () => {
@@ -29,10 +33,11 @@ const E = () => {
   },[count])
   return (
     <div>
-      <h2>learning Hooks useEffect</h2>
+      <h2>learning Hooks context</h2>
       <input value={name} onChange={e => setName(e.target.value)}/>
       <p>{count}</p>
       <button onClick={()=> dispatchCount({type: 'add'})}>点击</button>
+      <p>context: {context}</p>
     </div>
   );
 };

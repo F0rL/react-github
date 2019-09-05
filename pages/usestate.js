@@ -12,7 +12,7 @@ const C = () => {
   }, []);
   return (
     <div>
-      <h2>learning Hooks</h2>
+      <h2>learning Hooks useState</h2>
       <p>{count}</p>
     </div>
   );

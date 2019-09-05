@@ -20,7 +20,7 @@ const D = () => {
   }, []);
   return (
     <div>
-      <h2>learning Hooks</h2>
+      <h2>learning Hooks useReducer</h2>
       <p>{count}</p>
     </div>
   );

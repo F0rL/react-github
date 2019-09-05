@@ -9,10 +9,14 @@
 import App, { Container } from "next/app";
 import React from "react";
 import Layout from "../components/Layout";
+import MyContext from "../lib/my-context";
 
 import "antd/dist/antd.css";
 
 class MyApp extends App {
+  state = {
+    context: 'value'
+  }
   //每次页面切换都执行此方法
   static async getInitialProps({ Component, ctx }) {
     let pageProps = {};
@@ -26,7 +30,10 @@ class MyApp extends App {
     const { Component, pageProps } = this.props;
     return (
       <Layout>
-        <Component {...pageProps} />
+        <MyContext.Provider value={this.state.context}>
+          <Component {...pageProps} />
+          <button onClick={() => this.setState({context: `${this.state.context} is updated`})}>update context</button>
+        </MyContext.Provider>
       </Layout>
     );
   }

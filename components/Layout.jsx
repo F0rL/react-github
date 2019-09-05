@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "antd";
-import {Fragment} from 'react'
+import { Fragment } from "react";
 export default ({ children }) => (
   <Fragment>
     <header>
@@ -18,6 +18,9 @@ export default ({ children }) => (
       </Link>
       <Link href="/useeffect">
         <Button>to useeffect</Button>
+      </Link>
+      <Link href="/context">
+        <Button>to context</Button>
       </Link>
     </header>
     {children}
