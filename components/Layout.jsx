@@ -10,6 +10,9 @@ export default ({ children }) => (
       <Link href="/b">
         <Button>to b</Button>
       </Link>
+      <Link href="/c">
+        <Button>to c</Button>
+      </Link>
     </header>
     {children}
   </Fragment>
