@@ -16,6 +16,9 @@ export default ({ children }) => (
       <Link href="/usereducer">
         <Button>to usereducer</Button>
       </Link>
+      <Link href="/useeffect">
+        <Button>to useeffect</Button>
+      </Link>
     </header>
     {children}
   </Fragment>
