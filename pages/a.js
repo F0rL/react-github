@@ -1,5 +1,20 @@
-import { withRouter} from 'next/router'
+import { withRouter } from "next/router";
 
-const A =  ({router}) => <p>a page id : {router.query.id}</p>
+const A = ({ router, name}) => {
+  console.log(router)
+  return (
+    <p>a page id : {router.query.id}; name: {name}</p>
+  )
+};
 
-export default withRouter(A)
+A.getInitialProps = async () => {
+  const promise = new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        name: 'kuma'
+      })
+    }, 1000)
+  })
+  return await promise
+}
+export default withRouter(A);
