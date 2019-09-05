@@ -20,20 +20,7 @@ events.forEach(event => {
 })
 
 export default () => {
-  function gotoPageB() {
-    Router.push({
-      pathname: '/b',
-      query: {
-        id: 2
-      }
-    }, '/b/2');
-  }
   return (
-    <div>
-      <Link href="/a?id=1" as="/a/1">
-        <Button>to a</Button>
-      </Link>
-      <Button onClick={gotoPageB}>to b</Button>
-    </div>
-  );
+    <span>Index</span>
+  )
 };
