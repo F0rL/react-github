@@ -1,20 +1,48 @@
 import { withRouter } from "next/router";
+import Link from "next/link";
 
-const A = ({ router, name}) => {
-  console.log(router)
+//组件被渲染后，样式（包括global样式）才会显示
+
+const color = 'pink'
+const A = ({ router, name }) => {
   return (
-    <p>a page id : {router.query.id}; name: {name}</p>
-  )
+    <>
+      <Link>
+        <a>
+          <p>
+            a page id : {router.query.id}; name: {name}
+          </p>
+        </a>
+      </Link>
+      <style jsx>
+        {`
+          a {
+            color: blue;
+          }
+          a {
+            color: ${color};
+          }
+        `}
+      </style>
+      <style jsx global>
+        {`
+          a {
+            color: yellow;
+          }
+        `}
+      </style>
+    </>
+  );
 };
 
-A.getInitialProps = async () => {
-  const promise = new Promise((resolve) => {
+A.getInitialProps = async ctx => {
+  const promise = new Promise(resolve => {
     setTimeout(() => {
       resolve({
-        name: 'kuma'
-      })
-    }, 1000)
-  })
-  return await promise
-}
+        name: "kuma"
+      });
+    }, 1000);
+  });
+  return await promise;
+};
 export default withRouter(A);

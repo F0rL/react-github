@@ -14,7 +14,7 @@ import "antd/dist/antd.css";
 
 class MyApp extends App {
   //每次页面切换都执行此方法
-  static async getInitialProps({ Component, router, ctx }) {
+  static async getInitialProps({ Component, ctx }) {
     let pageProps = {};
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);
