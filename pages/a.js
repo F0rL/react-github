@@ -3,31 +3,32 @@ import Link from "next/link";
 
 //组件被渲染后，样式（包括global样式）才会显示
 
-const color = 'pink'
-const A = ({ router, name }) => {
+const color = "pink";
+const A = ({ router, name, time }) => {
   return (
     <>
-      <Link>
-        <a>
+      <Link href="/">
+        <div>
           <p>
             a page id : {router.query.id}; name: {name}
           </p>
-        </a>
+          <p>time: {time}</p>
+        </div>
       </Link>
       <style jsx>
         {`
-          a {
+          p {
             color: blue;
           }
-          a {
+          p {
             color: ${color};
           }
         `}
       </style>
       <style jsx global>
         {`
-          a {
-            color: yellow;
+          p {
+            font-size: 20px;
           }
         `}
       </style>
@@ -36,10 +37,12 @@ const A = ({ router, name }) => {
 };
 
 A.getInitialProps = async ctx => {
+  const moment = await import('moment')
   const promise = new Promise(resolve => {
     setTimeout(() => {
       resolve({
-        name: "kuma"
+        name: "kuma",
+        time: moment.default(Date.now() - 60 * 1000).fromNow()
       });
     }, 1000);
   });
