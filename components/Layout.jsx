@@ -10,8 +10,11 @@ export default ({ children }) => (
       <Link href="/b">
         <Button>to b</Button>
       </Link>
-      <Link href="/c">
-        <Button>to c</Button>
+      <Link href="/usestate">
+        <Button>to usestate</Button>
+      </Link>
+      <Link href="/usereducer">
+        <Button>to usereducer</Button>
       </Link>
     </header>
     {children}
