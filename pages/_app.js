@@ -12,7 +12,7 @@ import Layout from "../components/Layout";
 import MyContext from "../lib/my-context";
 import { Provider } from 'react-redux'
 import store from '../store'
-
+import Hoc from '../lib/test-hoc'
 import "antd/dist/antd.css";
 
 class MyApp extends App {
@@ -42,4 +42,4 @@ class MyApp extends App {
     );
   }
 }
-export default MyApp;
+export default Hoc(MyApp);
