@@ -2,6 +2,7 @@ import Link from "next/link";
 import Router from "next/router";
 import { Button } from "antd";
 import { connect } from "react-redux";
+import {add} from '../store'
 
 const events = [
   "routeChangeStart",
@@ -30,6 +31,10 @@ const Index = ({count,name,changeNum}) => {
     </div>
   );
 };
+Index.getInitialProps = async ({reduxStore}) => {
+  reduxStore.dispatch(add(5))
+  return {}
+}
 
 const mapStateToProps = (state) => {
   return {

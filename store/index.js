@@ -8,7 +8,7 @@ const initialNumState = {
 
 const ADD = "count/ADD_COUNT";
 
-function add(num) {
+export function add(num) {
   return {
     type: ADD,
     num
@@ -55,18 +55,25 @@ const allReducer = combineReducers({
   NAME: nameReducer
 });
 
-const store = createStore(
-  allReducer,
-  composeWithDevTools(applyMiddleware(ReduxThunk))
-);
 
-console.log(store.getState());
-store.dispatch(add(3));
-console.log(store.getState());
-store.dispatch(changeName("kuma"));
-console.log(store.getState());
-store.dispatch(addAsync(5));
-console.log(store.getState());
-store.subscribe(() => console.log("changed: ", store.getState()));
 
-export default store;
+// console.log(store.getState());
+// store.dispatch(add(3));
+// console.log(store.getState());
+// store.dispatch(changeName("kuma"));
+// console.log(store.getState());
+// store.dispatch(addAsync(5));
+// console.log(store.getState());
+// store.subscribe(() => console.log("changed: ", store.getState()));
+
+export default function initializeStore(state) {
+  const store = createStore(
+    allReducer,
+    Object.assign({}, {
+      COUNT: initialNumState,
+      NAME: initialNameState
+    },state),
+    composeWithDevTools(applyMiddleware(ReduxThunk))
+  );
+  return store
+};

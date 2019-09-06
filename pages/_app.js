@@ -11,8 +11,7 @@ import React from "react";
 import Layout from "../components/Layout";
 import MyContext from "../lib/my-context";
 import { Provider } from 'react-redux'
-import store from '../store'
-import Hoc from '../lib/test-hoc'
+import Hoc from '../lib/with-redux'
 import "antd/dist/antd.css";
 
 class MyApp extends App {
@@ -20,7 +19,8 @@ class MyApp extends App {
     context: 'value'
   }
   //每次页面切换都执行此方法
-  static async getInitialProps({ Component, ctx }) {
+  static async getInitialProps(ctx) {
+    const { Component } = ctx
     let pageProps = {};
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);
@@ -29,10 +29,10 @@ class MyApp extends App {
   }
 
   render() {
-    const { Component, pageProps } = this.props;
+    const { Component, pageProps, reduxStore } = this.props;
     return (
       <Layout>
-        <Provider store={store}>
+        <Provider store={reduxStore}>
         <MyContext.Provider value={this.state.context}>
           <Component {...pageProps} />
           <button onClick={() => this.setState({context: `${this.state.context} is updated`})}>update context</button>
@@ -43,3 +43,4 @@ class MyApp extends App {
   }
 }
 export default Hoc(MyApp);
+
