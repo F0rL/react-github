@@ -10,6 +10,8 @@ import App, { Container } from "next/app";
 import React from "react";
 import Layout from "../components/Layout";
 import MyContext from "../lib/my-context";
+import { Provider } from 'react-redux'
+import store from '../store'
 
 import "antd/dist/antd.css";
 
@@ -30,10 +32,12 @@ class MyApp extends App {
     const { Component, pageProps } = this.props;
     return (
       <Layout>
+        <Provider store={store}>
         <MyContext.Provider value={this.state.context}>
           <Component {...pageProps} />
           <button onClick={() => this.setState({context: `${this.state.context} is updated`})}>update context</button>
         </MyContext.Provider>
+        </Provider>
       </Layout>
     );
   }

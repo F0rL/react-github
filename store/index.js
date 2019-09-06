@@ -1,24 +1,72 @@
-import { createStore} from 'redux'
+import { createStore, applyMiddleware, compose, combineReducers } from "redux";
+import ReduxThunk from "redux-thunk";
+import { composeWithDevTools } from "redux-devtools-extension";
 
-const initialState = {
+const initialNumState = {
   count: 0
+};
+
+const ADD = "count/ADD_COUNT";
+
+function add(num) {
+  return {
+    type: ADD,
+    num
+  };
 }
-
-const ADD = 'ADD_COUNT'
-
-function reducer(state = initialState, action) {
-  switch(action.type) {
+function addAsync(num) {
+  return dispatch => {
+    setTimeout(() => {
+      dispatch(add(num));
+    }, 1000);
+  };
+}
+function numReducer(state = initialNumState, action) {
+  switch (action.type) {
     case ADD:
-      return {count: state.count + 1}
+      return { count: state.count + action.num };
     default:
-      return state
+      return state;
   }
 }
 
-const store  = createStore(reducer, initialState)
+const initialNameState = {
+  name: ""
+};
 
-console.log(store.getState())
-store.dispatch({type: ADD})
-console.log(store.getState())
+const CHANGE_NAME = "name/CHANGE_NAME";
 
-export default store
+function changeName(name) {
+  return {
+    type: CHANGE_NAME,
+    name
+  };
+}
+function nameReducer(state = initialNameState, action) {
+  switch (action.type) {
+    case CHANGE_NAME:
+      return { name: action.name };
+    default:
+      return state;
+  }
+}
+const allReducer = combineReducers({
+  COUNT: numReducer,
+  NAME: nameReducer
+});
+
+const store = createStore(
+  allReducer,
+  composeWithDevTools(applyMiddleware(ReduxThunk))
+);
+
+console.log(store.getState());
+store.dispatch(add(3));
+console.log(store.getState());
+store.dispatch(changeName("kuma"));
+console.log(store.getState());
+store.dispatch(addAsync(5));
+console.log(store.getState());
+store.subscribe(() => console.log("changed: ", store.getState()));
+
+export default store;
