@@ -3,6 +3,9 @@ import { Icon, Input, Layout, Menu, Breadcrumb, Avatar } from "antd";
 const { Header, Content, Footer } = Layout;
 import Container from './Container'
 
+import getConfig from 'next/config'
+const {serverRuntimeConfig, publicRuntimeConfig} = getConfig()
+
 const githubIconStyle = {
   color: '#fff',
   fontSize: 40,
@@ -40,7 +43,9 @@ export default ({ children }) => {
           </div>
           <div className="header-right">
             <div className="user-logo">
+              <a href={publicRuntimeConfig.OAUTH_URL}>
               <Avatar size={40} icon="user" />
+              </a>
             </div>
           </div>
         </Container>

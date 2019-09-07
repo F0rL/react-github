@@ -44,14 +44,14 @@ app.prepare().then(() => {
   //   }
   //   await next()
   // })
-  router.get("/a/:id", async (ctx) => {
-    const id = ctx.params.id;
-    await handle(ctx.req, ctx.res, {
-      pathname: "/a",
-      query: { id }
-    });
-    ctx.respond = false;
-  });
+  // router.get("/a/:id", async (ctx) => {
+  //   const id = ctx.params.id;
+  //   await handle(ctx.req, ctx.res, {
+  //     pathname: "/a",
+  //     query: { id }
+  //   });
+  //   ctx.respond = false;
+  // });
 
   router.get("/api/set/user", async (ctx) => {
     //触发set方法
