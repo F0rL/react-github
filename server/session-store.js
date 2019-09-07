@@ -2,6 +2,8 @@ function getRedisSessionId(sid) {
   return `ssid:${sid}`
 }
 
+
+//使用set/user接口会触发set方法，使用delete接口会触发get和destroy方法
 class RedisSessionStore {
   constructor(client) {
     this.client = client
