@@ -6,6 +6,8 @@ const session = require("koa-session")
 const RedisSessionStore = require('./server/session-store')
 const Redis = require('ioredis')
 
+const auth = require('./server/auth')
+
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
@@ -25,25 +27,9 @@ app.prepare().then(() => {
   }
   server.use(session(SESSION_CONFIG,server))
 
-  // server.use(async (ctx, next) => {
-  //   if(ctx.cookies.get('gid')){
-  //     ctx.session = {}
-  //   }
-  //   await next()
-  // })
-  // server.use(async (ctx, next) => {
-  //   // console.log(ctx.cookies.get('id'))
-  //   //获取用户数据
-  //   if(ctx.session.user) {
-  //     ctx.session.user = {
-  //       name: 'kuma',
-  //       age: 22
-  //     }
-  //   }else {
-  //     console.log('session is',  ctx.session.user)
-  //   }
-  //   await next()
-  // })
+  //配置github登录
+  auth(server)
+
   router.get("/a/:id", async (ctx) => {
     const id = ctx.params.id;
     await handle(ctx.req, ctx.res, {
@@ -51,6 +37,18 @@ app.prepare().then(() => {
       query: { id }
     });
     ctx.respond = false;
+  });
+
+  router.get("/api/user/info", async (ctx) => {
+    const user = ctx.session.userInfo
+    // console.log('user: ', user)
+    if(!user) {
+      ctx.status = 401
+      ctx.body = 'need login'
+    }else {
+      ctx.body = user
+      ctx.set('Content-Type', 'application/json')
+    }
   });
 
   router.get("/set/user", async (ctx) => {

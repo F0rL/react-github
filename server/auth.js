@@ -1,0 +1,53 @@
+const axios = require("axios");
+const config = require("../config");
+const { client_id, client_secret, request_token_url } = config.github;
+
+module.exports = server => {
+  server.use(async (ctx, next) => {
+    if (ctx.path === "/api/oauth") {
+      const code = ctx.query.code;
+      if (!code) {
+        ctx.body = "code not exist";
+        return;
+      }
+      const result = await axios({
+        method: "POST",
+        url: request_token_url,
+        data: {
+          client_id,
+          client_secret,
+          code
+        },
+        headers: {
+          Accept: "application/json"
+        }
+      });
+      //第二次用code请求token仍然会返回200，但返回内容为error，需排除
+      if (result.status === 200 && !result.data.error) {
+        // 返回的格式
+        // result.data = {
+        //   access_token: "9db2adaed452c70da72b6ca298c4dbaa00be6313",
+        //   token_type: "bearer",
+        //   scope: "user"
+        // };
+        ctx.session.githubAuth = result.data;
+        const {access_token, token_type} = result.data
+        const userInfoResp = await axios({
+          method: 'GET',
+          url: 'https://api.github.com/user',
+          headers: {
+            'Authorization': `${token_type} ${access_token}`
+          }
+        })
+        console.log('userInfoResp: ', userInfoResp.data)
+        ctx.session.userInfo = userInfoResp.data
+        ctx.redirect("/");
+      } else {
+        const errorMsg = result.data && result.data.error
+        ctx.body = `request token failed ${errorMsg}`;
+      }
+    } else {
+      await next();
+    }
+  });
+};
