@@ -53,15 +53,27 @@ app.prepare().then(() => {
     ctx.respond = false;
   });
 
-  router.get("/set/user", async (ctx) => {
+  router.get("/api/set/user", async (ctx) => {
     //触发set方法
-    ctx.session.user ={
+    ctx.session.userInfo ={
       name: 'kuma',
       age: 22
     }
     ctx.body = 'set session success'
   });
-  router.get("/delete/user", async (ctx) => {
+
+  router.get("/api/user/info", async(ctx) => {
+    const user = ctx.session.userInfo
+    if(!user) {
+      ctx.status = 401
+      ctx.body = 'Need Login'
+    }else {
+      ctx.body = user
+      ctx.set('Content-Type', 'application/json')
+    }
+  })
+
+  router.get("/api/delete/user", async (ctx) => {
     //触发destroy方法
     ctx.session = null
     ctx.body = 'delete session success'
@@ -71,8 +83,8 @@ app.prepare().then(() => {
 
   server.use(async (ctx, next) => {
     // ctx.cookies.set('id', 'userID:xxxxxxxxxxxxxx')
+    ctx.req.session = ctx.session
     await handle(ctx.req, ctx.res);
-
     //不在使用koa内置的对body处理
     ctx.respond = false;
   });
