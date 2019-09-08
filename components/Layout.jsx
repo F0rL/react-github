@@ -1,6 +1,8 @@
 import { useState, useCallback } from "react";
 import { Icon, Input, Layout, Avatar, Tooltip, Dropdown, Menu } from "antd";
 import { connect } from "react-redux";
+import { userLogout } from "../store";
+
 const { Header, Content, Footer } = Layout;
 import Container from "./Container";
 
@@ -19,7 +21,7 @@ const footerStyle = {
 };
 // const Comp = ({color, children, style}) => <div style={{color, ...style}}>{children}</div>
 
-const MyLayout = ({ children, user }) => {
+const MyLayout = ({ children, user, logout }) => {
   const [search, setSearch] = useState("");
 
   const handleSearchValue = useCallback(event => {
@@ -28,12 +30,9 @@ const MyLayout = ({ children, user }) => {
 
   const handleOnSearch = useCallback(() => {}, []);
 
-  // const userMenu = (
-  //   <Menu>
-  //     <Menu.Item>登出</Menu.Item>
-  //   </Menu>
-  // );
-
+  const handleLogout = useCallback(() => {
+    logout();
+  }, []);
   return (
     <Layout>
       <Header>
@@ -54,9 +53,13 @@ const MyLayout = ({ children, user }) => {
           <div className="header-right">
             <div className="user-logo">
               {user && user.id ? (
-                <Avatar size={40} src={user.avatar_url} />
+                <Tooltip title="点击登出">
+                  <a onClick={handleLogout}>
+                    <Avatar size={40} src={user.avatar_url} />
+                  </a>
+                </Tooltip>
               ) : (
-                <Tooltip title="点击进行登录">
+                <Tooltip title="点击登录">
                   <a href={publicRuntimeConfig.OAUTH_URL}>
                     <Avatar size={40} icon="user" />
                   </a>
@@ -98,12 +101,22 @@ const MyLayout = ({ children, user }) => {
       `}</style>
     </Layout>
   );
-}
+};
 
 const mapState = state => {
   return {
     user: state.USER
   };
 };
+const mapReducer = dispatch => {
+  return {
+    logout() {
+      dispatch(userLogout());
+    }
+  };
+};
 
-export default connect(mapState)(MyLayout);
+export default connect(
+  mapState,
+  mapReducer
+)(MyLayout);
