@@ -44,7 +44,7 @@ export default ({ children }) => {
           <div className="header-right">
             <div className="user-logo">
               <a href={publicRuntimeConfig.OAUTH_URL}>
-              <Avatar size={40} icon="user" />
+                <Avatar size={40} icon="user" />
               </a>
             </div>
           </div>

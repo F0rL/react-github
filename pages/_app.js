@@ -10,7 +10,8 @@ import App from "next/app";
 import React from "react";
 import Layout from "../components/Layout";
 import { Provider } from "react-redux";
-import Hoc from "../lib/with-redux";
+//重要 同步服务端客户端
+import WithRedux from "../lib/with-redux";
 import "antd/dist/antd.css";
 
 class MyApp extends App {
@@ -38,4 +39,4 @@ class MyApp extends App {
     );
   }
 }
-export default Hoc(MyApp);
+export default WithRedux(MyApp);

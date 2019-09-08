@@ -1,6 +1,10 @@
 module.exports ={
   github: {
-    client_id: 'Iv1.4242a665309979d7',
-    client_secret: '934f71e2ca6469c324eb14651372c0498e45339e'
+    oAuth_url: 'https://github.com/login/oauth/authorize',
+    oAuth_scope: 'user',
+    request_token_url: 'https://github.com/login/oauth/access_token',
+    get_user_url: 'https://api.github.com/user',
+    client_id: '05f5bd249a75e51efd9b',
+    client_secret: '5220d4339d20c21226c3115c2ad46a0958007eb9'
   }
 }
