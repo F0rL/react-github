@@ -29,6 +29,18 @@ app.prepare().then(() => {
   //配置github登录
   auth(server)
 
+  router.get("/api/user/info", async (ctx) => {
+    const user = ctx.session.userInfo
+    // console.log('user: ', user)
+    if(!user) {
+      ctx.status = 401
+      ctx.body = 'need login'
+    }else {
+      ctx.body = user
+      ctx.set('Content-Type', 'application/json')
+    }
+  });
+  
   server.use(router.routes());
 
   server.use(async (ctx, next) => {

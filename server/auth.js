@@ -2,6 +2,8 @@ const axios = require("axios");
 const config = require("../config");
 const { client_id, client_secret, request_token_url, get_user_url } = config.github;
 
+// ctx.session.githubAuth 保存token
+// ctx.session.userInfo 保存用户信息
 module.exports = server => {
   server.use(async (ctx, next) => {
     if (ctx.path === "/api/oauth") {
