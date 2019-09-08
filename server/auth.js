@@ -1,6 +1,6 @@
 const axios = require("axios");
 const config = require("../config");
-const { client_id, client_secret, request_token_url, get_user_url } = config.github;
+const { client_id, client_secret, request_token_url, get_user_url, OAUTH_URL } = config.github;
 
 // ctx.session.githubAuth 保存token
 // ctx.session.userInfo 保存用户信息
@@ -45,7 +45,8 @@ module.exports = server => {
         })
         // console.log('userInfoResp: ', userInfoResp.data)
         ctx.session.userInfo = userInfoResp.data
-        ctx.redirect('/')
+        ctx.redirect((ctx.session && ctx.session.urlBeforeOAuth) || '/')
+        ctx.session.urlBeforeOAuth = ''
       }else {
         const errorMsg = result.data && result.data.error
         ctx.body = `request token failed ${errorMsg}`
@@ -60,6 +61,17 @@ module.exports = server => {
     if(path === '/logout' && method === 'POST') {
       ctx.session = null
       ctx.body = 'logout success'
+    }else {
+      await next()
+    }
+  })
+  server.use( async (ctx, next) => {
+    const path = ctx.path
+    const method = ctx.method
+    if(path === '/prepare-auth' && method === 'GET') {
+      const {url} = ctx.query
+      ctx.session.urlBeforeOAuth = url
+      ctx.redirect(OAUTH_URL)
     }else {
       await next()
     }

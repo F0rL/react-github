@@ -54,7 +54,7 @@ if (typeof require !== "undefined") {
 }
 //如果引用多个包，这里可以连环调用eg：withLess（withCss({})）
 
-const {oAuth_url, oAuth_scope, client_id} = config.github
+const {OAUTH_URL} = config.github
 
 module.exports = withCss({
   env: {
@@ -67,6 +67,6 @@ module.exports = withCss({
   // 在服务端渲染和客户端渲染都可获取的配置
   publicRuntimeConfig: {
     staticFolder: "/static",
-    OAUTH_URL: `${oAuth_url}?client_id=${client_id}&scope=${oAuth_scope}`
+    OAUTH_URL
   } // 这里配置了之后才会生效
 });
