@@ -25,15 +25,15 @@ const footerStyle = {
 // const Comp = ({color, children, style}) => <div style={{color, ...style}}>{children}</div>
 
 const MyLayout = ({ children, user, logout, router }) => {
-  const urlQuery = router.query && router.query.query
-  const [search, setSearch] = useState(urlQuery || '');
+  const urlQuery = router.query && router.query.query;
+  const [search, setSearch] = useState(urlQuery || "");
 
   const handleSearchValue = useCallback(event => {
     setSearch(event.target.value);
   }, []);
 
   const handleOnSearch = useCallback(() => {
-    router.push(`/search?query=${search}`)
+    router.push(`/search?query=${search}`);
   }, [search]);
 
   const handleLogout = useCallback(() => {
@@ -62,7 +62,9 @@ const MyLayout = ({ children, user, logout, router }) => {
           <div className="header-left">
             <div className="header-logo">
               <Link href="/">
-                <Icon type="github" style={githubIconStyle} />
+                <a>
+                  <Icon type="github" style={githubIconStyle} />
+                </a>
               </Link>
             </div>
             <div>

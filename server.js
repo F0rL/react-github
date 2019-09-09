@@ -2,6 +2,7 @@ const Koa = require("koa");
 const Router = require("koa-router");
 const next = require("next");
 const session = require("koa-session")
+const koaBody = require('koa-body')
 
 const RedisSessionStore = require('./server/session-store')
 const Redis = require('ioredis')
@@ -20,6 +21,8 @@ app.prepare().then(() => {
   const router = new Router();
 
   server.keys = ['kuma develop github']
+  server.use(koaBody())
+
   const SESSION_CONFIG = {
     key: 'gid',
     //maxAge: 10 * 1000,
