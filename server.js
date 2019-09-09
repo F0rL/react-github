@@ -6,6 +6,7 @@ const session = require("koa-session")
 const RedisSessionStore = require('./server/session-store')
 const Redis = require('ioredis')
 const auth = require('./server/auth')
+const api = require('./server/api')
 
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
@@ -28,6 +29,8 @@ app.prepare().then(() => {
 
   //配置github登录
   auth(server)
+  //配置代理github请求
+  api(server)
 
   router.get("/api/user/info", async (ctx) => {
     const user = ctx.session.userInfo
