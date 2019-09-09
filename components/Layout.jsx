@@ -1,8 +1,9 @@
 import { useState, useCallback } from "react";
+import Link from "next/link";
 import { Icon, Input, Layout, Avatar, Tooltip, Dropdown, Menu } from "antd";
 import { connect } from "react-redux";
 import axios from "axios";
-import { withRouter } from "next/router";
+import { withRouter, Router } from "next/router";
 import { userLogout } from "../store";
 
 const { Header, Content, Footer } = Layout;
@@ -24,13 +25,16 @@ const footerStyle = {
 // const Comp = ({color, children, style}) => <div style={{color, ...style}}>{children}</div>
 
 const MyLayout = ({ children, user, logout, router }) => {
-  const [search, setSearch] = useState("");
+  const urlQuery = router.query && router.query.query
+  const [search, setSearch] = useState(urlQuery || '');
 
   const handleSearchValue = useCallback(event => {
     setSearch(event.target.value);
   }, []);
 
-  const handleOnSearch = useCallback(() => {}, []);
+  const handleOnSearch = useCallback(() => {
+    router.push(`/search?query=${search}`)
+  }, [search]);
 
   const handleLogout = useCallback(() => {
     logout();
@@ -57,7 +61,9 @@ const MyLayout = ({ children, user, logout, router }) => {
         <Container renderer={<div className="header-inner"></div>}>
           <div className="header-left">
             <div className="header-logo">
-              <Icon type="github" style={githubIconStyle} />
+              <Link href="/">
+                <Icon type="github" style={githubIconStyle} />
+              </Link>
             </div>
             <div>
               <Input.Search
@@ -78,9 +84,7 @@ const MyLayout = ({ children, user, logout, router }) => {
                 </Tooltip>
               ) : (
                 <Tooltip title="点击登录">
-                  <a
-                    href={`/prepare-auth?url=${router.asPath}`}
-                  >
+                  <a href={`/prepare-auth?url=${router.asPath}`}>
                     <Avatar size={40} icon="user" />
                   </a>
                 </Tooltip>
@@ -112,11 +116,14 @@ const MyLayout = ({ children, user, logout, router }) => {
           height: 100%;
         }
         .ant-layout {
-          height: 100%;
+          min-height: 100%;
         }
         .ant-layout-header {
           padding-left: 0;
           padding-right: 0;
+        }
+        .ant-layout-content {
+          background: #fff;
         }
       `}</style>
     </Layout>
