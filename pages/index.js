@@ -1,14 +1,21 @@
 import api from "../lib/api";
-import { Button, Icon } from "antd";
+import { Button, Icon, Tabs } from "antd";
 import getConfig from "next/config";
-import {connect} from 'react-redux'
+import { connect } from "react-redux";
+import Router, {withRouter} from 'next/router'
 
+import Repo from "../components/Repo";
 
 const { publicRuntimeConfig } = getConfig();
 
-const Index = ({ userRepos, userStaredRepos, user }) => {
+const Index = ({ userRepos, userStaredRepos, user, router }) => {
   console.log(userRepos);
   console.log(userStaredRepos);
+  const tabKey = router.query.key || '1'
+
+  const handleTabChange = (activeKey) => {
+    Router.push(`/?tabKey=${activeKey}`)
+  }
   if (!user || !user.id) {
     return (
       <div className="root">
@@ -39,18 +46,29 @@ const Index = ({ userRepos, userStaredRepos, user }) => {
         <span className="name">{user.name}</span>
         <span className="bio">{user.bio}</span>
         <p className="email">
-          <Icon type="mail" style={{marginRight: 10}}></Icon>
+          <Icon type="mail" style={{ marginRight: 10 }}></Icon>
           <a href={`mailto:${user.email}`}>{user.email}</a>
         </p>
       </div>
       <div className="user-repos">
-        <p>user repos</p>
+        <Tabs defaultActiveKey={tabKey} onChange={handleTabChange} animated={false}>
+          <Tabs.TabPane tab="你的仓库" key="1">
+            {userRepos.map(repo => {
+              return <Repo repo={repo} key={repo.id} />;
+            })}
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="你的仓库" key="2">
+            {userStaredRepos.map(repo => {
+              return <Repo repo={repo} key={repo.id} />;
+            })}
+          </Tabs.TabPane>
+        </Tabs>
       </div>
       <style jsx>{`
-        .root{
+        .root {
           display: flex;
           align-items: flex-start;
-          padding: 20px 0; 
+          padding: 20px 0;
         }
         .user-info {
           width: 200px;
@@ -76,10 +94,12 @@ const Index = ({ userRepos, userStaredRepos, user }) => {
           width: 100%;
           border-radius: 5px;
         }
-
+        .user-repos {
+          flex-grow: 1;
+        }
       `}</style>
     </div>
-  )
+  );
 };
 
 Index.getInitialProps = async ({ ctx, reduxStore }) => {
@@ -89,30 +109,30 @@ Index.getInitialProps = async ({ ctx, reduxStore }) => {
       isLogin: false
     };
   }
-  // const userRepos = await api.request(
-  //   {
-  //     url: "/user/repos"
-  //   },
-  //   ctx.req,
-  //   ctx.res
-  // );
-  // const userStaredRepos = await api.request(
-  //   {
-  //     url: "/user/starred"
-  //   },
-  //   ctx.req,
-  //   ctx.res
-  // );
+  const userRepos = await api.request(
+    {
+      url: "/user/repos"
+    },
+    ctx.req,
+    ctx.res
+  );
+  const userStaredRepos = await api.request(
+    {
+      url: "/user/starred"
+    },
+    ctx.req,
+    ctx.res
+  );
   return {
-    // userRepos: userRepos.data,
-    // userStaredRepos: userStaredRepos.data,
+    userRepos: userRepos.data,
+    userStaredRepos: userStaredRepos.data,
     isLogin: true
   };
 };
 
-const mapState = (state) => {
+const mapState = state => {
   return {
     user: state.USER
-  }
-}
-export default connect(mapState)(Index);
+  };
+};
+export default connect(mapState)(withRouter(Index));
