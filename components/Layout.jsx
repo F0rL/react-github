@@ -10,7 +10,7 @@ const { Header, Content, Footer } = Layout;
 import Container from "./Container";
 
 import getConfig from "next/config";
-const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
+const { publicRuntimeConfig } = getConfig();
 
 const githubIconStyle = {
   color: "#fff",
