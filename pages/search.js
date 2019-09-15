@@ -1,4 +1,4 @@
-import { useCallback, memo, isValidElement } from "react";
+import { useEffect, memo, isValidElement } from "react";
 import { withRouter } from "next/router";
 import { Row, Col, List, Pagination } from "antd";
 import Link from "next/link";
@@ -6,6 +6,7 @@ import Router from "next/router";
 const api = require("../lib/api");
 
 import Repo from '../components/Repo'
+import {cacheArray} from '../lib/repo-basic-cache'
 
 const LANGUAGES = ["JavaScript", "HTML", "CSS", "TypeScript", "Java"];
 const SORT_TYPES = [
@@ -48,6 +49,8 @@ function noop(){}
 
 const per_page = 20
 
+const isServer = typeof window === 'undefined'
+
 const FilterLink = memo(({ name, query, lang, sort, order, page }) => {
   let queryString = `\?query=${query}`;
   if (lang) queryString += `&lang=${lang}`;
@@ -65,6 +68,11 @@ const Search = ({ router, repos }) => {
 
   const { ...querys } = router.query;
   const { lang, sort, order, page } = router.query;
+
+
+  useEffect(()=>{
+    if(!isServer) {cacheArray(repos.items)}
+  })
 
   return (
     <div className="root">

@@ -8,6 +8,8 @@ import LRU from 'lru-cache'
 
 import Repo from "../components/Repo";
 
+import {cacheArray} from '../lib/repo-basic-cache'
+
 const { publicRuntimeConfig } = getConfig();
 
 //服务端渲染，变量永远存在于模块，缓存被公用，要注意处理
@@ -45,6 +47,17 @@ const Index = ({ userRepos, userStaredRepos, user, router }) => {
       }
     }
   }, [userRepos,userStaredRepos])
+
+  if ( user && user.id){
+    useEffect(()=>{
+      if(!isServer) {
+        cacheArray(userRepos)
+        cacheArray(userStaredRepos)
+      }
+    })
+  }
+
+  
 
   if (!user || !user.id) {
     return (
