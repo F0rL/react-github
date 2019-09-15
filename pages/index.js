@@ -1,21 +1,51 @@
+import { useEffect } from 'react'
 import api from "../lib/api";
 import { Button, Icon, Tabs } from "antd";
 import getConfig from "next/config";
 import { connect } from "react-redux";
 import Router, {withRouter} from 'next/router'
+import LRU from 'lru-cache'
 
 import Repo from "../components/Repo";
 
 const { publicRuntimeConfig } = getConfig();
 
+//服务端渲染，变量永远存在于模块，缓存被公用，要注意处理
+let cacheUserRepos, cacheUserStaredRepos
+
+const isServer = typeof window === 'undefined'
+
+const cache = new LRU({
+  maxAge: 1000 * 60 * 10  //如果10分钟没使用，则删除
+})
+
 const Index = ({ userRepos, userStaredRepos, user, router }) => {
-  console.log(userRepos);
-  console.log(userStaredRepos);
+  // console.log(userRepos);
+  // console.log(userStaredRepos);
   const tabKey = router.query.key || '1'
 
   const handleTabChange = (activeKey) => {
     Router.push(`/?tabKey=${activeKey}`)
   }
+
+  useEffect(() => {
+    // 使用setTimeout做缓存策略
+    // cacheUserRepos = userRepos
+    // cacheUserStaredRepos = userStaredRepos
+    // const timeout = setTimeout(()=>{
+    //   cacheUserRepos = null
+    //   cacheUserStaredRepos = null
+    // }, 1000*60*10)
+    if(!isServer) {
+      if(userRepos) {
+        cache.set('userRepos', userRepos)
+      }
+      if(userStaredRepos) {
+        cache.set('userStaredRepos', userStaredRepos)
+      }
+    }
+  }, [userRepos,userStaredRepos])
+
   if (!user || !user.id) {
     return (
       <div className="root">
@@ -57,7 +87,7 @@ const Index = ({ userRepos, userStaredRepos, user, router }) => {
               return <Repo repo={repo} key={repo.id} />;
             })}
           </Tabs.TabPane>
-          <Tabs.TabPane tab="你的仓库" key="2">
+          <Tabs.TabPane tab="关注的仓库" key="2">
             {userStaredRepos.map(repo => {
               return <Repo repo={repo} key={repo.id} />;
             })}
@@ -102,6 +132,7 @@ const Index = ({ userRepos, userStaredRepos, user, router }) => {
   );
 };
 
+
 Index.getInitialProps = async ({ ctx, reduxStore }) => {
   const user = reduxStore.getState().USER;
   if (!user || !user.id) {
@@ -109,6 +140,18 @@ Index.getInitialProps = async ({ ctx, reduxStore }) => {
       isLogin: false
     };
   }
+
+  if(!isServer) {
+    // console.log(cacheUserRepos,cacheUserStaredRepos)
+    if(cache.get('userRepos') && cache.get('userStaredRepos')) {
+      return {
+        userRepos: cache.get('userRepos'),
+        userStaredRepos: cache.get('userStaredRepos')
+      }
+    }
+  }
+
+  console.log('send ajax')
   const userRepos = await api.request(
     {
       url: "/user/repos"
@@ -123,6 +166,7 @@ Index.getInitialProps = async ({ ctx, reduxStore }) => {
     ctx.req,
     ctx.res
   );
+
   return {
     userRepos: userRepos.data,
     userStaredRepos: userStaredRepos.data,
@@ -135,4 +179,4 @@ const mapState = state => {
     user: state.USER
   };
 };
-export default connect(mapState)(withRouter(Index));
+export default withRouter(connect(mapState)(Index));
