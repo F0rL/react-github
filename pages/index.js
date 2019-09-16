@@ -48,14 +48,12 @@ const Index = ({ userRepos, userStaredRepos, user, router }) => {
     }
   }, [userRepos,userStaredRepos])
 
-  if ( user && user.id){
-    useEffect(()=>{
-      if(!isServer) {
-        cacheArray(userRepos)
-        cacheArray(userStaredRepos)
-      }
-    })
-  }
+  useEffect(()=>{
+    if(!isServer) {
+      cacheArray(userRepos)
+      cacheArray(userStaredRepos)
+    }
+  })
 
   
 
