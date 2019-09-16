@@ -1,4 +1,6 @@
+const webpack  = require("webpack")
 const withCss = require("@zeit/next-css");
+const withBundleAnalyzer =require('@zeit/next-bundle-analyzer')
 const config = require('./config')
 
 const configs = {
@@ -56,7 +58,11 @@ if (typeof require !== "undefined") {
 
 const {OAUTH_URL} = config.github
 
-module.exports = withCss({
+module.exports = withBundleAnalyzer(withCss({
+  webpack(config){
+    config.plugins.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/))
+    return config
+  },
   env: {
     customKey: "value"
   },
@@ -68,5 +74,16 @@ module.exports = withCss({
   publicRuntimeConfig: {
     staticFolder: "/static",
     OAUTH_URL
-  } // 这里配置了之后才会生效
-});
+  }, // 这里配置了之后才会生效
+  analyzeBrowser: ['browser', 'both'].includes(process.env.BUNDLE_ANALYZE),
+  bundleAnalyzerConfig: {
+    server: {
+      analyzerMode: 'static',
+      reportFilename: '../bundle/server.html'
+    },
+    browser: {
+      analyzerMode: 'static',
+      reportFilename: '../bundle/client.html'
+    }
+  }
+}));

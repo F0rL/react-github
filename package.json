@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build"
   },
   "repository": {
     "type": "git",
@@ -44,6 +45,7 @@
     "styled-components": "^4.3.2"
   },
   "devDependencies": {
-    "@zeit/next-bundle-analyzer": "^0.1.2"
+    "@zeit/next-bundle-analyzer": "^0.1.2",
+    "cross-env": "^5.2.1"
   }
 }
