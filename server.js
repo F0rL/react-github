@@ -8,6 +8,7 @@ const RedisSessionStore = require('./server/session-store')
 const Redis = require('ioredis')
 const auth = require('./server/auth')
 const api = require('./server/api')
+const atob = require('atob')
 
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
@@ -15,6 +16,9 @@ const handle = app.getRequestHandler();
 
 //创建redis client
 const redis = new Redis()
+
+//设置node.js全局增加一个atob方法
+global.atob = atob
 
 app.prepare().then(() => {
   const server = new Koa();
